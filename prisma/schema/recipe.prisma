@@ -1,0 +1,92 @@
+model Recipe {
+    id String @id @default(cuid())
+
+    title       String
+    description String
+    calories    Int
+    cookingTime Int        @map("cooking_time")
+    difficulty  Difficulty
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @map("author_id")
+
+    recipeIngredients RecipeIngredient[]
+    recipeSteps       RecipeStep[]
+    comments          Comment[]
+    likes             Like[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("recipes")
+}
+
+model Ingredient {
+    id String @id @default(cuid())
+
+    name       String
+    defaulUnit Unit   @map("default_unit")
+
+    recipes RecipeIngredient[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("ingredients")
+}
+
+model RecipeIngredient {
+    id String @id @default(cuid())
+
+    name     String
+    iconUrl  String  @map("icon_url")
+    content  String
+    quantity Decimal
+    unit     Unit
+    price    Decimal
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    recipe   Recipe? @relation(fields: [recipeId], references: [id])
+    recipeId String? @map("recipe_id")
+
+    ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
+    ingredientId String?     @map("ingridient_id")
+
+    orderItems OrderItem[]
+
+    @@unique([recipeId, ingredientId])
+    @@map("recipe_ingredients")
+}
+
+model RecipeStep {
+    id String @id @default(cuid())
+
+    order       Int
+    title       String
+    description String
+
+    recipe   Recipe @relation(fields: [recipeId], references: [id])
+    recipeId String @map("recipe_id")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("recipe_steps")
+}
+
+enum Unit {
+    GRAM // g
+    MILLILITED // ml
+    PIECE // шт
+    TEASPOON // ч.л.
+    TABLESPOON // ст.л
+    CLOVES // зубчик
+}
+
+enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+}
