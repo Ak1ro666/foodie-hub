@@ -8,18 +8,17 @@ import { ConfigService } from '@nestjs/config'
 import { PrismaClient } from 'prisma/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
-import { Env, ENV_CONFIG_KEYS } from '@/palform/config/env'
+import { ENV_CONFIG_KEYS } from '@/palform/config/env'
 
 @Injectable()
 export class PrismaService
 	extends PrismaClient
-	implements OnModuleInit, OnModuleDestroy
-{
+	implements OnModuleInit, OnModuleDestroy {
 	private readonly logger = new Logger(PrismaService.name)
 	private readonly pool: Pool
 
-	constructor(config: ConfigService) {
-		const connectionString = config.getOrThrow<Env>(
+	constructor(configService: ConfigService) {
+		const connectionString = configService.getOrThrow<string>(
 			ENV_CONFIG_KEYS.DATABASE_URL
 		)
 

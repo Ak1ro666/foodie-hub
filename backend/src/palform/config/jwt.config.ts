@@ -5,5 +5,5 @@ import { ENV_CONFIG_KEYS } from './env'
 export const getJwtConfig = (
 	configService: ConfigService
 ): JwtModuleOptions => ({
-	secret: configService.get<string>(ENV_CONFIG_KEYS.JWT_SECRET)
+	secret: configService.getOrThrow<string>(ENV_CONFIG_KEYS.JWT_SECRET)
 })
