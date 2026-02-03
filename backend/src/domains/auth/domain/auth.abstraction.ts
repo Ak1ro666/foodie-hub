@@ -1,5 +1,6 @@
 import { Role } from 'prisma/generated/prisma/enums'
 import { Field, InputType, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { OmitNullAndUndefinedWithUnion, Simplify } from '@/palform/types/utils'
 
 @InputType()
 export class AuthInput {
@@ -36,7 +37,13 @@ export class AuthResponse {
 	accessToken: string
 }
 
+export type CurrentUserType = Simplify<UserModel> | null
+export type CurrentUserTypeKey = Simplify<keyof OmitNullAndUndefinedWithUnion<CurrentUserType>>
 export type AuthTokenData = {
 	id: string
 	role: Role
+}
+
+export type RequestWithUser = {
+	user: CurrentUserType
 }

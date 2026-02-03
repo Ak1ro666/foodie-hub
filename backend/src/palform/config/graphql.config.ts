@@ -12,7 +12,7 @@ export const getGraphQLConfig = (
 ): ApolloDriverConfig => ({
 	autoSchemaFile: true,
 	sortSchema: true,
-	playground: configService.get<string>('MODE') === 'development',
-	debug: configService.get<string>('MODE') === 'development',
+	playground: configService.getOrThrow<string>('MODE') === 'development',
+	debug: configService.getOrThrow<string>('MODE') === 'development',
 	context: ({ req, res }: GraphQLContext) => ({ req, res }) // Для авторизации, чтобы в потенциале пробрасывались токены для авторизации
 })
